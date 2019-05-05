@@ -33,6 +33,7 @@ except ImportError: AppDirs = None
 from dpt_file import File
 from dpt_json import JsonResource
 from dpt_runtime.binary import Binary
+from dpt_runtime.environment import Environment
 from dpt_runtime.io_exception import IOException
 from dpt_runtime.stacked_dict import StackedDict
 from dpt_runtime.value_exception import ValueException
@@ -94,7 +95,7 @@ Runtime settings dict
         """
 
         self._runtime_dict.add_dict(self._file_dict)
-        self._process_os_environment()
+        self._process_environment()
     #
 
     @property
@@ -122,7 +123,7 @@ Returns the runtime settings dictionary.
         return self._runtime_dict
     #
 
-    def _process_os_environment(self):
+    def _process_environment(self):
         """
 Sets path values in the runtime settings dictionary based on the OS
 environment.
@@ -130,26 +131,27 @@ environment.
 :since: v1.0.0
         """
 
-        system_path = path.sep.join(path.abspath(__file__).split(path.sep)[:-2])
-        self._runtime_dict['path_system'] = Binary.str(path.normpath(system_path))
+        base_path = Environment.get_base_path()
 
-        self._runtime_dict['path_base'] = (Binary.str(os.environ['dNGpath'])
-                                           if ("dNGpath" in os.environ) else
-                                           path.dirname(self._runtime_dict['path_system'])
-                                          )
+        if ("path_base" not in self._runtime_dict
+            or base_path != self._runtime_dict['path_base']
+           ): self._runtime_dict['path_base'] = base_path
 
         path_data = (Binary.str(os.environ['dNGpathData']) if ("dNGpathData" in os.environ) else None)
 
         if (path_data is None and AppDirs is not None):
-            app_name = (Binary.str(os.environ['dNGapp']) if ("dNGapp" in os.environ) else "dNGapp")
+            app_name = Environment.get_application_short_name()
 
             app_dirs = AppDirs(app_name, "dNG")
             if (os.access(app_dirs.site_data_dir, (os.R_OK | os.X_OK))): path_data = app_dirs.site_data_dir
         #
 
-        if (path_data is None): path_data = path.join(self._runtime_dict['path_base'], "data")
+        if (path_data is None): path_data = path.join(base_path, "data")
 
-        self._runtime_dict['path_data'] = path_data
+        if (os.access(path_data, (os.R_OK | os.X_OK))):
+            self._runtime_dict['path_data'] = path_data
+            Settings.read_file("{0}/settings/core.json".format(self._runtime_dict['path_data']))
+        #
     #
 
     def update(self, other):
@@ -264,7 +266,6 @@ Initializes a new settings singleton instance.
         # pylint: disable=protected-access
 
         Settings._instance = Settings()
-        Settings.read_file("{0}/settings/core.json".format(Settings._instance.runtime_dict['path_data']))
     #
 
     @staticmethod
@@ -371,7 +372,7 @@ Read all settings from the given file.
     #
 
     @staticmethod
-    def _reprocess_os_environment():
+    def _reprocess_environment():
         """
 This method should only be called after changing the OS environment to
 process it.
@@ -381,7 +382,7 @@ process it.
 
         # pylint: disable=protected-access
 
-        Settings.get_instance()._process_os_environment()
+        Settings.get_instance()._process_environment()
     #
 
     @staticmethod
