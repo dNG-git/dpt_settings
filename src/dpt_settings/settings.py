@@ -137,12 +137,13 @@ environment.
             or base_path != self._runtime_dict['path_base']
            ): self._runtime_dict['path_base'] = base_path
 
-        path_data = (Binary.str(os.environ['dNGpathData']) if ("dNGpathData" in os.environ) else None)
+        path_data = (Binary.str(os.environ['DPT_PATH_DATA']) if ("DPT_PATH_DATA" in os.environ) else None)
 
         if (path_data is None and AppDirs is not None):
             app_name = Environment.get_application_short_name()
+            app_vendor = Environment.get_application_vendor()
 
-            app_dirs = AppDirs(app_name, "dNG")
+            app_dirs = AppDirs(app_name, app_vendor)
             if (os.access(app_dirs.site_data_dir, (os.R_OK | os.X_OK))): path_data = app_dirs.site_data_dir
         #
 
