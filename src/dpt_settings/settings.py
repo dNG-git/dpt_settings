@@ -95,7 +95,6 @@ Runtime settings dict
         """
 
         self._runtime_dict.add_dict(self._file_dict)
-        self._process_environment()
     #
 
     @property
@@ -267,6 +266,7 @@ Initializes a new settings singleton instance.
         # pylint: disable=protected-access
 
         Settings._instance = Settings()
+        Settings._instance._process_environment()
     #
 
     @staticmethod
