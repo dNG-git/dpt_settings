@@ -17,4 +17,5 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
+from .environment_dict import EnvironmentDict
 from .settings import Settings
