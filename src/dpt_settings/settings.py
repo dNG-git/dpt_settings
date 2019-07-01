@@ -228,7 +228,7 @@ not defined.
         key_with_lang = "{0}_{1}".format(key, lang)
         _return = (_dict[key_with_lang] if (key_with_lang in _dict) else None)
 
-        if (_return is None): _return = (_dict[key] if (key in _dict) else default)
+        if (_return is None): _return = _dict.get(key, default)
 
         return _return
     #
