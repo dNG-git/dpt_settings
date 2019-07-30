@@ -113,9 +113,9 @@ python.org: Called to implement the built-in function len().
     @property
     def variable_names(self):
         """
-@TODO: Document me
+Returns all environment variables matching the configured prefix or all.
 
-:return: (object) Iterator object
+:return: (list) Matched environment variable names
 :since:  v1.1.0
         """
 
@@ -125,9 +125,9 @@ python.org: Called to implement the built-in function len().
 
     def _get_variable_name_for_key(self, key):
         """
-@TODO: Document me
+Returns the environment variable name for the given key.
 
-:return: (object) Iterator object
+:return: (str) Environment variable name
 :since:  v1.1.0
         """
 
