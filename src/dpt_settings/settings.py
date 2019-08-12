@@ -347,16 +347,22 @@ Read all settings from the given file.
                 file_content = file_object.read()
                 file_object.close()
 
-                if (file_content is not None):
-                    file_content = file_content.replace("\r", "")
-                    file_content = Settings.RE_EXTENDED_JSON_COMMENT_LINE.sub("", file_content)
-                    if (Settings._cache_instance is not None): Settings._cache_instance.set_file(file_path_name, file_content)
-                #
-            elif (required): raise IOException("{0} not found".format(file_path_name))
-            elif (Settings._log_handler is not None): Settings._log_handler.debug("{0} not found", file_path_name, context = "dpt_settings")
+                if (file_content is not None
+                    and Settings._cache_instance is not None
+                   ): Settings._cache_instance.set_file(file_path_name, file_content)
+            #
+        else: file_content = Binary.str(file_content)
+
+        if (file_content is not None):
+            file_content = file_content.replace("\r", "")
+            file_content = Settings.RE_EXTENDED_JSON_COMMENT_LINE.sub("", file_content)
         #
 
-        if (file_content is None): _return = False
+        if (file_content is None):
+            if (required): raise IOException("{0} not found".format(file_path_name))
+            if (Settings._log_handler is not None): Settings._log_handler.debug("{0} not found", file_path_name, context = "dpt_settings")
+
+            _return = False
         elif (not Settings._import_file_json(file_content)):
             if (required): raise ValueException("{0} is not a valid JSON encoded settings file".format(file_path_name))
             if (Settings._log_handler is not None): Settings._log_handler.warning("{0} is not a valid JSON encoded settings file", file_path_name, context = "dpt_settings")
