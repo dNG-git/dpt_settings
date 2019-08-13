@@ -120,7 +120,14 @@ Returns all environment variables matching the configured prefix or all.
         """
 
         prefix_len = (0 if (self._prefix is None) else len(self._prefix))
-        return [ key[prefix_len:] for key in environ if (self._prefix is None or key.upper().startswith(self._prefix)) ]
+
+        return [ key[prefix_len:]
+                 for key in environ if ((self._prefix is None
+                                         or key.upper().startswith(self._prefix)
+                                        )
+                                        and EnvironmentDict.RE_SPECIAL_CHARACTERS.search(key) is None
+                                       )
+               ]
     #
 
     def _get_variable_name_for_key(self, key):
