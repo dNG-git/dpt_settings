@@ -44,6 +44,12 @@ variables.
 RegExp to find non-word characters
     """
 
+    __slots__ = [ "_prefix" ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
+
     def __init__(self, prefix = None):
         """
 Constructor __init__(EnvironmentDict)
