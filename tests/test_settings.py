@@ -17,6 +17,7 @@ unittest
 """
 
 from os import path
+import os
 import unittest
 
 from dpt_settings import Settings
@@ -35,9 +36,13 @@ Tests the calculated paths.
 
         settings = Settings()
 
-        self.assertTrue(settings.get("path_system")
-                        == path.sep.join(path.abspath(__file__).split(path.sep)[:-2] + [ "src" ])
+        self.assertTrue(settings.get("path_base")
+                        == path.sep.join(path.abspath(__file__).split(path.sep)[:-2])
                        )
+
+        if ("DPT_PATH_DATA" in os.environ and os.access(os.environ['DPT_PATH_DATA'], (os.R_OK | os.X_OK))):
+            self.assertTrue(settings.get("path_data") == os.environ['DPT_PATH_DATA'])
+        #
     #
 #
 
