@@ -32,11 +32,8 @@ except ImportError: AppDirs = None
 
 from dpt_file import File
 from dpt_json import JsonResource
-from dpt_runtime.binary import Binary
-from dpt_runtime.environment import Environment
-from dpt_runtime.io_exception import IOException
-from dpt_runtime.stacked_dict import StackedDict
-from dpt_runtime.value_exception import ValueException
+from dpt_runtime import Binary, Environment, StackedDict
+from dpt_runtime.exceptions import IOException, ValueException
 
 class Settings(object):
     """
