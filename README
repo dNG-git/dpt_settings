@@ -7,6 +7,13 @@ All-in-one toolbox to encapsulate Python runtime variants
 configuration handling.
 
 ----------------------------------------------------------------------------
+Deprecation notice
+----------------------------------------------------------------------------
+
+Please be aware that functionality has been integrated into package
+"dpt-runtime".
+
+----------------------------------------------------------------------------
 Licensing
 ----------------------------------------------------------------------------
 
